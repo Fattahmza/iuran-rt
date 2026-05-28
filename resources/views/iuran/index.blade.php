@@ -68,6 +68,9 @@
         20% { opacity: 0.5; } 80% { opacity: 0.5; }
         100% { transform: translateY(-20vh) scale(1); opacity: 0; }
     }
+
+    /* Badge Telat */
+    .badge-telat { background: #dc3545; color: white; padding: 0.35rem 0.75rem; border-radius: 2rem; font-size: 0.7rem; }
 </style>
 
 <!-- Ikan di Tengah -->
@@ -129,29 +132,57 @@
             </div>
         </form>
 
+        <!-- ========== TAMBAHKAN FILTER JENIS IURAN ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="btn-group flex-wrap" role="group">
+                    <a href="{{ route('iuran.index') }}" class="btn btn-outline-primary btn-sm {{ !request('jenis') ? 'active' : '' }}">Semua</a>
+                    <a href="{{ route('iuran.index', ['jenis' => 'iuran_bulanan']) }}" class="btn btn-outline-primary btn-sm {{ request('jenis') == 'iuran_bulanan' ? 'active' : '' }}">Iuran Bulanan</a>
+                    <a href="{{ route('iuran.index', ['jenis' => 'keamanan']) }}" class="btn btn-outline-primary btn-sm {{ request('jenis') == 'keamanan' ? 'active' : '' }}">Iuran Keamanan</a>
+                    <a href="{{ route('iuran.index', ['jenis' => 'kebersihan']) }}" class="btn btn-outline-primary btn-sm {{ request('jenis') == 'kebersihan' ? 'active' : '' }}">Iuran Kebersihan</a>
+                    <a href="{{ route('iuran.index', ['jenis' => 'perawatan']) }}" class="btn btn-outline-primary btn-sm {{ request('jenis') == 'perawatan' ? 'active' : '' }}">Iuran Perawatan</a>
+                    <a href="{{ route('iuran.index', ['jenis' => 'kegiatan_rutin']) }}" class="btn btn-outline-primary btn-sm {{ request('jenis') == 'kegiatan_rutin' ? 'active' : '' }}">Kegiatan Rutin</a>
+                </div>
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
-                    <tr><th>No</th><th>Foto</th><th>Nama Warga</th><th>RT/RW</th><th>Bulan/Tahun</th><th>Jumlah</th><th>Tanggal Bayar</th><th>Status</th><th>Jenis</th>@if(auth()->user()->isAdmin() || auth()->user()->isBendahara())<th>Aksi</th>@endif</thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Foto</th>
+                        <th>Nama Warga</th>
+                        <th>RT/RW</th>
+                        <th>Jenis Iuran</th>
+                        <th>Bulan/Tahun</th>
+                        <th>Jumlah</th>
+                        <th>Tanggal Bayar</th>
+                        <th>Status</th>
+                        @if(auth()->user()->isAdmin() || auth()->user()->isBendahara())<th>Aksi</th>@endif
+                    </tr>
+                </thead>
                 <tbody>
                     @forelse($iurans ?? [] as $i => $item)
                     @php $warga = $item->user; @endphp
                     <tr>
-                        <td class="fw-bold">{{ $iurans->firstItem() + $i }}</p>
+                        <td class="fw-bold">{{ $iurans->firstItem() + $i }}</td>
                         <td><img src="{{ $warga && $warga->avatar ? asset('storage/avatars/'.$warga->avatar) : 'https://ui-avatars.com/api/?background=0a4d6e&color=fff&name='.urlencode($warga->name ?? 'U') }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;"></td>
                         <td><div><strong>{{ $warga->name ?? 'Unknown' }}</strong><br><small class="text-muted">{{ $warga->email ?? '-' }}</small></div></td>
                         <td>RT {{ $warga->rt ?? '-' }}/RW {{ $warga->rw ?? '-' }}</td>
+                        <td><span class="badge bg-{{ $item->jenisColor }}"><i class="{{ $item->jenisIcon }} me-1"></i>{{ $item->jenisLabel }}</span></td>
                         <td>{{ $item->bulan ?? '-' }} {{ $item->tahun ?? '-' }}</td>
                         <td class="fw-bold">Rp {{ number_format($item->jumlah ?? 0, 0, ',', '.') }}</td>
                         <td>{{ $item->tanggal_bayar ? $item->tanggal_bayar->format('d/m/Y') : '-' }}</td>
-                        <td>@if(($item->status ?? '') == 'lunas')<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Lunas</span>@elseif(($item->status ?? '') == 'belum')<span class="badge bg-danger"><i class="fas fa-clock me-1"></i>Belum</span>@else<span class="badge bg-warning"><i class="fas fa-spinner me-1"></i>Pending</span>@endif</td>
-                        <td>@if(($item->jenis ?? '') == 'pengeluaran')<span class="badge bg-danger">Pengeluaran</span>@elseif(($item->jenis ?? '') == 'iuran_wajib')<span class="badge bg-primary">Iuran Wajib</span>@elseif(($item->jenis ?? '') == 'iuran_sukarela')<span class="badge bg-info">Iuran Sukarela</span>@elseif(($item->jenis ?? '') == 'denda')<span class="badge bg-warning text-dark">Denda</span>@else<span class="badge bg-success">Sumbangan</span>@endif</td>
+                        <td>{!! $item->statusBadge !!}</td>
                         @if(auth()->user()->isAdmin() || auth()->user()->isBendahara())
                         <td><div class="btn-group"><a href="{{ route('iuran.edit', $item->id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>@if(auth()->user()->isAdmin())<button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $item->id }})" title="Hapus"><i class="fas fa-trash"></i></button><form id="delete-form-{{ $item->id }}" action="{{ route('iuran.destroy', $item->id) }}" method="POST" style="display: none;">@csrf @method('DELETE')</form>@endif</div></td>
                         @endif
                     </tr>
                     @empty
-                    <td colspan="10" class="text-center py-5 text-muted"><i class="fas fa-inbox fa-3x mb-3 d-block"></i>Belum ada data iuran</td>
+                    <tr>
+                        <td colspan="10" class="text-center py-5 text-muted"><i class="fas fa-inbox fa-3x mb-3 d-block"></i>Belum ada data iuran</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

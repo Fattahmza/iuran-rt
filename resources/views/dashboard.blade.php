@@ -84,6 +84,16 @@
     .btn-quick:hover { transform: translateY(-3px); }
     .welcome-section { background: linear-gradient(135deg, #0a4d6e, #006994); border-radius: 1.5rem; padding: 1.8rem; color: white; margin-bottom: 2rem; position: relative; overflow: hidden; }
     .welcome-section::before { content: '🐠🐟🐡🦈'; position: absolute; bottom: 10px; right: 20px; font-size: 50px; opacity: 0.1; }
+
+    /* Notifikasi Telat */
+    .alert-telat {
+        background: linear-gradient(135deg, #fff3cd, #ffe69e);
+        border-left: 5px solid #dc3545;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .badge-telat { background: #dc3545; color: white; padding: 0.35rem 0.75rem; border-radius: 2rem; font-size: 0.75rem; }
 </style>
 
 <!-- Ikan di Tengah -->
@@ -103,6 +113,25 @@
             <div class="mt-2 mt-sm-0"><div class="bg-white bg-opacity-25 rounded-3 p-3"><small>Login sebagai</small><h5 class="mb-0">{{ auth()->user()->role->display_name ?? 'User' }}</h5></div></div>
         </div>
     </div>
+
+    <!-- ========== NOTIFIKASI IURAN TELAT ========== -->
+    @if(($totalTelat ?? 0) > 0)
+    <div class="alert-telat alert-dismissible fade show" role="alert">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <i class="fas fa-exclamation-triangle fa-2x me-3 float-start" style="color: #dc3545;"></i>
+                <div>
+                    <strong class="text-danger">⚠️ PERINGATAN!</strong> Terdapat <strong class="text-danger">{{ $totalTelat }}</strong> warga yang <strong class="text-danger">telat membayar iuran</strong> bulan ini!<br>
+                    <small>Total denda yang harus dibayar: <strong class="text-danger">Rp {{ number_format($totalDenda ?? 0, 0, ',', '.') }}</strong></small>
+                </div>
+            </div>
+            <a href="{{ route('iuran.index', ['status' => 'belum']) }}" class="btn btn-danger btn-sm mt-2 mt-sm-0">
+                <i class="fas fa-eye me-1"></i> Lihat Detail
+            </a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    @endif
 
     <!-- Row 1: Statistik Cards (4 card) -->
     <div class="row g-4 mb-4">
@@ -185,7 +214,7 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
-                                <tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th class="text-end">Jumlah</th></td>
+                                <tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th class="text-end">Jumlah</th></tr>
                             </thead>
                             <tbody>
                                 @forelse($transaksiTerbaru ?? [] as $item)

@@ -18,7 +18,6 @@
             overflow-x: hidden;
             position: relative;
         }
-        /* Wave */
         .wave-bg {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 120px;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.15)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,186.7C672,192,768,224,864,229.3C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/></svg>') repeat-x;
@@ -31,7 +30,6 @@
         }
         @keyframes wave { 0% { background-position-x: 0; } 100% { background-position-x: 1440px; } }
 
-        /* Bubble */
         .bubble-bg {
             position: fixed; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), rgba(255,255,255,0.1));
             border-radius: 50%; animation: bubbleFloat 10s infinite ease-in-out; z-index: 0; pointer-events: none;
@@ -42,7 +40,6 @@
             100% { transform: translateY(-20vh) scale(1); opacity: 0; }
         }
 
-        /* Fish */
         .fish-bg { position: fixed; z-index: 0; pointer-events: none; }
         .fish-body {
             position: relative; width: 50px; height: 25px; background: linear-gradient(135deg, #ff6b6b, #ee5a24);
@@ -68,7 +65,6 @@
         .fish3 .fish-body { background: linear-gradient(135deg, #1dd1a1, #10ac84); width: 40px; height: 20px; }
         .fish4 .fish-body { background: linear-gradient(135deg, #a29bfe, #6c5ce7); width: 45px; height: 22px; }
 
-        /* Light */
         .light-reflection {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 60%);
@@ -76,7 +72,6 @@
         }
         @keyframes lightMove { from { opacity: 0.3; transform: translateX(-5%); } to { opacity: 0.6; transform: translateX(5%); } }
 
-        /* Seaweed */
         .seaweed-bg {
             position: fixed; bottom: 0; left: 20px; width: 25px; height: 70px;
             background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 0 0 12px 12px;
@@ -87,7 +82,6 @@
         .seaweed-bg:nth-child(4) { right: 100px; left: auto; height: 40px; width: 18px; animation-delay: 0.3s; }
         @keyframes sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
 
-        /* Sidebar */
         .sidebar {
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             min-height: 100vh; position: sticky; top: 0; z-index: 100;
@@ -100,9 +94,8 @@
         .sidebar .nav-link:hover { background: rgba(0,105,148,0.1); transform: translateX(5px); }
         .sidebar .nav-link.active { background: linear-gradient(135deg, #006994, #004e6e); color: white; }
         .sidebar .nav-link i { width: 24px; margin-right: 10px; text-align: center; }
-        .sidebar .section-title { color: #006994; font-size: 0.7rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; padding-left: 0.5rem; }
+        .sidebar .section-title { color: #006994; font-size: 0.7rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; padding-left: 0.5rem; letter-spacing: 1px; }
 
-        /* Main Content */
         .main-content {
             background: rgba(255,255,255,0.92); backdrop-filter: blur(5px);
             min-height: 100vh; border-radius: 2rem 0 0 2rem; z-index: 1; position: relative;
@@ -113,24 +106,27 @@
         .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,105,148,0.4); color: white; }
         .table thead th { background: linear-gradient(135deg, #006994, #004e6e); color: white; font-weight: 600; border: none; }
         .welcome-section { background: linear-gradient(135deg, #006994, #004e6e); border-radius: 1.5rem; padding: 2rem; color: white; margin-bottom: 2rem; position: relative; overflow: hidden; }
+        .modal { z-index: 2000 !important; }
+        .modal-backdrop { z-index: 1990 !important; }
         .welcome-section::before { content: '🐠🐟🐡🦈'; position: absolute; bottom: 10px; right: 20px; font-size: 50px; opacity: 0.1; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in-up { animation: fadeInUp 0.5s ease-out; }
+
+        .badge-pending { background-color: #fff3cd; color: #856404; }
+        .badge-verified { background-color: #d4edda; color: #155724; }
+        .badge-rejected { background-color: #f8d7da; color: #721c24; }
+        .badge-lunas { background-color: #d4edda; color: #155724; }
+        .badge-belum { background-color: #fff3cd; color: #856404; }
     </style>
     @stack('styles')
 </head>
 <body>
-    <!-- Waves -->
     <div class="wave-bg"></div>
     <div class="wave-bg-2"></div>
-
-    <!-- Seaweed -->
     <div class="seaweed-bg"></div>
     <div class="seaweed-bg"></div>
     <div class="seaweed-bg"></div>
     <div class="seaweed-bg"></div>
-
-    <!-- Light -->
     <div class="light-reflection"></div>
 
     <div class="container-fluid p-0">
@@ -147,38 +143,71 @@
                     </div>
                     <hr>
                     <nav class="nav flex-column">
-                        <!-- Dashboard -->
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
 
-                        <!-- TRANSAKSI -->
-                        <div class="section-title">TRANSAKSI</div>
-                        <a class="nav-link" href="{{ route('iuran.index') }}"><i class="fas fa-exchange-alt"></i> Pemasukan</a>
-                        <a class="nav-link" href="{{ route('iuran.index', ['tipe' => 'pengeluaran']) }}"><i class="fas fa-minus-circle"></i> Pengeluaran</a>
-                        <a class="nav-link" href="{{ route('transfer.index') }}"><i class="fas fa-random"></i> Transfer</a>
-                        <a class="nav-link" href="{{ route('kategori.index') }}"><i class="fas fa-tags"></i> Kategori</a>
+                        @auth
+                            @if(auth()->user()->isAdmin() || auth()->user()->isBendahara())
+                                <!-- MENU UNTUK ADMIN & BENDAHARA -->
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
 
-                        <!-- MASTER DATA -->
-                        <div class="section-title">MASTER DATA</div>
-                        <a class="nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}" href="{{ route('warga.index') }}"><i class="fas fa-users"></i> Warga</a>
-                        <a class="nav-link" href="{{ route('iuran-warga.index') }}"><i class="fas fa-hand-holding-usd"></i> Iuran Warga</a>
-                        <a class="nav-link" href="{{ route('pengurus-rt.index') }}"><i class="fas fa-user-tie"></i> Pengurus RT</a>
-                        <a class="nav-link" href="{{ route('data-rt.index') }}"><i class="fas fa-building"></i> Data RT</a>
+                                <div class="section-title">IURAN</div>
+                                <a class="nav-link {{ request()->routeIs('iuran.index') ? 'active' : '' }}" href="{{ route('iuran.index') }}">
+                                    <i class="fas fa-database"></i> Data Iuran
+                                </a>
+                                <a class="nav-link {{ request()->routeIs('iuran.create') ? 'active' : '' }}" href="{{ route('iuran.create') }}">
+                                    <i class="fas fa-plus-circle"></i> Tambah Iuran
+                                </a>
+                                <a class="nav-link {{ request()->routeIs('jenis-iuran.index') ? 'active' : '' }}" href="{{ route('jenis-iuran.index') }}">
+                                    <i class="fas fa-tags"></i> Buat Iuran Baru
+                                </a>
 
-                        <!-- LAPORAN -->
-                        <div class="section-title">LAPORAN</div>
-                        <a class="nav-link" href="{{ route('iuran.laporan') }}"><i class="fas fa-chart-line"></i> Laporan Keuangan</a>
-                        <a class="nav-link" href="{{ route('laporan-iuran.index') }}"><i class="fas fa-file-invoice"></i> Laporan Iuran</a>
-                        <a class="nav-link" href="{{ route('laporan-kas.index') }}"><i class="fas fa-coins"></i> Laporan Kas</a>
-                        <a class="nav-link" href="{{ route('iuran.export') }}"><i class="fas fa-file-excel"></i> Export Laporan</a>
+                                <div class="section-title">VERIFIKASI</div>
+                                <a class="nav-link {{ request()->routeIs('iuran.verifikasi') ? 'active' : '' }}" href="{{ route('iuran.verifikasi') }}">
+                                    <i class="fas fa-check-double"></i> Verifikasi Pembayaran
+                                </a>
 
-                        <!-- PENGATURAN -->
-                        <div class="section-title">PENGATURAN</div>
-                        <a class="nav-link" href="{{ route('pengaturan.index') }}"><i class="fas fa-cog"></i> Pengaturan</a>
-                        <a class="nav-link" href="{{ route('backup.index') }}"><i class="fas fa-database"></i> Backup Data</a>
-                        <a class="nav-link" href="{{ route('pengguna.index') }}"><i class="fas fa-users-cog"></i> Pengguna</a>
-                        <a class="nav-link" href="{{ route('profile.edit') }}"><i class="fas fa-user-circle"></i> Profil Saya</a>
+                                <div class="section-title">MASTER DATA</div>
+                                <a class="nav-link {{ request()->routeIs('warga.index') ? 'active' : '' }}" href="{{ route('warga.index') }}">
+                                    <i class="fas fa-users"></i> Warga
+                                </a>
+
+                                <div class="section-title">LAPORAN</div>
+                                <a class="nav-link {{ request()->routeIs('iuran.laporan') ? 'active' : '' }}" href="{{ route('iuran.laporan') }}">
+                                    <i class="fas fa-chart-line"></i> Laporan Keuangan
+                                </a>
+                                <a class="nav-link {{ request()->routeIs('laporan-iuran.index') ? 'active' : '' }}" href="{{ route('laporan-iuran.index') }}">
+                                    <i class="fas fa-file-invoice"></i> Laporan Iuran
+                                </a>
+                                <a class="nav-link {{ request()->routeIs('iuran.export') ? 'active' : '' }}" href="{{ route('iuran.export') }}">
+                                    <i class="fas fa-file-excel"></i> Export Laporan
+                                </a>
+
+                                <div class="section-title">PROFIL</div>
+                                <a class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user-circle"></i> Profil Saya
+                                </a>
+
+                            @else
+                                <!-- MENU UNTUK WARGA -->
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+
+                                <div class="section-title">IURAN</div>
+                                <a class="nav-link {{ request()->routeIs('iuran.create') ? 'active' : '' }}" href="{{ route('iuran.create') }}">
+                                    <i class="fas fa-credit-card"></i> Bayar Iuran
+                                </a>
+                                <a class="nav-link {{ request()->routeIs('iuran.index') ? 'active' : '' }}" href="{{ route('iuran.index') }}">
+                                    <i class="fas fa-history"></i> Riwayat Pembayaran
+                                </a>
+
+                                <div class="section-title">PROFIL</div>
+                                <a class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user-circle"></i> Profil Saya
+                                </a>
+                            @endif
+                        @endauth
 
                         <hr class="mt-3">
                         <form method="POST" action="{{ route('logout') }}">
@@ -193,7 +222,6 @@
 
             <!-- Main Content -->
             <div class="col main-content p-4">
-                <!-- Top Bar -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="fw-bold mb-0" style="color: #006994;">@yield('header', 'Dashboard')</h2>
